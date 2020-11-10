@@ -1,0 +1,26 @@
+{
+  "name": "project-2",
+  "version": "1.0.0",
+  "description": "CMPG RESTful API for handling user logins and file uploads",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HenryHayes-jpg/Project-2.git"
+  },
+  "keywords": [
+    "RESTful",
+    "API"
+  ],
+  "author": "Henry Hayes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HenryHayes-jpg/Project-2/issues"
+  },
+  "homepage": "https://github.com/HenryHayes-jpg/Project-2#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
