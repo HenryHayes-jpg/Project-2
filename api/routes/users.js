@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-    res.status(200).json({
+    res.status(201).json({
         message: "Handling post request for users"
     });
 });
@@ -26,6 +26,20 @@ router.get('/:userId', (req, res, next)=>{
             message: 'You passed an ID'
         });
     }
+});
+
+router.patch('/:userId', (req, res, next)=>{
+    res.status(200).json({
+        message: "Update completed!"
+    });
+  
+});
+
+router.delete('/:userId', (req, res, next)=>{
+    res.status(200).json({
+        message: "Delete completed!"
+    });
+  
 });
 
 module.exports = router;
