@@ -1,11 +1,26 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');//package for viewing logging information
+const bodyParser = require('body-parser');
 
 const userRoutes = require('./api/routes/users');
 const uploadRoutes = require('./api/routes/uploads');
 
 app.use(morgan('dev'));//collects logging info from server
+app.use(bodyParser.urlencoded({extended: false}));//parses url data
+app.use(bodyParser.json());//parses json data
+
+//setting up CORS policy
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Origin-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if(req.method === 'OPTIONS'){
+        res.header('Access-Control-Origin-Methods', 'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).json({});
+    }
+    next();
+});
+
 app.use('/users', userRoutes);
 app.use('/uploads', uploadRoutes);
 

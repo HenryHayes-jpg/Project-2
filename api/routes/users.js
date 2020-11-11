@@ -9,8 +9,13 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const user = {
+        name: req.body.name,
+        userId: req.body.userId
+    };
     res.status(201).json({
-        message: "Handling post request for users"
+        message: "Handling post request for users",
+        createdUser: user
     });
 });
 

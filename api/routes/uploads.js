@@ -9,8 +9,14 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
+    const file = {
+        name: req.body.name,
+        fileId: req.body.fileId,
+        type: req.body.type
+    }
     res.status(201).json({
-        message: "Upload posted"
+        message: "Upload posted",
+        createdFile: file
     });
 });
 
