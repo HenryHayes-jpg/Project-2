@@ -2,9 +2,16 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');//package for viewing logging information
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const userRoutes = require('./api/routes/users');
 const uploadRoutes = require('./api/routes/uploads');
+
+//using mongoose to connect to my mongoDB
+mongoose.connect('mongodb+srv://Henry:' + process.env.MONGO_ATLAS_PW + '@cluster0.vnce9.mongodb.net/<dbname>?retryWrites=true&w=majority', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 app.use(morgan('dev'));//collects logging info from server
 app.use(bodyParser.urlencoded({extended: false}));//parses url data
