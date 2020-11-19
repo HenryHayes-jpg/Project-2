@@ -7,7 +7,7 @@ const User = require('../models/users');
 //returns a collection of files
 router.get('/', (req, res, next) => {
     //add other fields to select clause later on
-    Upload.find().select('user _id').exec().then(docs => {
+    Upload.find().select('user _id').populate('user', 'name').exec().then(docs => {
         res.status(200).json({
             count: docs.length,
             uploads: docs.map(doc =>{
@@ -56,7 +56,7 @@ router.post('/', (req, res, next) => {
             },
             request: {
                 type: 'GET',
-                url: req.protocol + "://" + req.get(host) + req.originalUrl
+                url: 'http://localhost:3000'
             }
         });
     }).catch(err => {
@@ -74,7 +74,7 @@ router.post('/', (req, res, next) => {
 //handling requests for individual file uploads and retrievals
 
 router.get('/:uploadId', (req, res, next)=>{
-    Upload.findById(req.params.uploadId).exec().then(upload => {
+    Upload.findById(req.params.uploadId).populate('user').exec().then(upload => {
         if(!order){
             return res.status(404).json({
                 message: "Upload not found"

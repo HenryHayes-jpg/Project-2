@@ -15,7 +15,7 @@ router.get('/', (req, res, next) => {
                     _id: doc._id,
                     request: {
                         type: 'GET',
-                        url: req.protocol + '://' + req.get('host') + req.originalUrl    
+                        url: "http://localhost:3000/users/" + doc._id  
                     }//hardcode the url domain once project has been hosted
                 }
             })
@@ -43,7 +43,7 @@ router.post('/', (req, res, next) => {
                 _id: result._id,
                 request: {
                     type: 'GET',
-                    url: req.protocol + "://" + req.get('host') + req.originalUrl
+                    url: 'http://localhost:3000/users/' + result._id
                 }
             }
         });
@@ -90,7 +90,7 @@ router.patch('/:userId', (req, res, next)=>{
             message: 'User updated',
             request: {
                 type: 'GET',
-                url: req.protocol + "://" + req.get('host') + req.originalUrl
+                url: 'http://localhost3000/users/' + id
             }
         });
     }).catch(err => {
