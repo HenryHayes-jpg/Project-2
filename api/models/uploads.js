@@ -4,9 +4,10 @@ const mongoose = require('mongoose');
 //a json notation for how a upload object will look
 const uploadSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    user: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
-    fileName: {type: String, required: true},
-    fileType: {type: String, required: true},
+    //user: {type: mongoose.Types.ObjectId, ref: 'User', required: true},
+    file: {type: String, required: true},
+   // fileName: {type: String, required: true},
+    //fileType: {type: String, required: true},
 });
 
 module.exports = mongoose.model('Upload', uploadSchema);
