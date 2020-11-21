@@ -27,16 +27,15 @@ const fileUpload = multer({storage: storage});
 //******************************************************************************** */
 router.get('/', (req, res, next) => {
     //add other fields to select clause later on
-    Upload.find().select('_id file').populate('user', 'name').exec().then(docs => {
+    Upload.find().select('_id file fileName').populate('user', 'name').exec().then(docs => {
         res.status(200).json({
             count: docs.length,
             uploads: docs.map(doc =>{
                 //add filename and filetype later
                 return {
                     _id: doc._id,
-                    //user: doc.user,
                     file: doc.file,
-                    //filetype: doc.fileType
+                    filename: doc.fileName,
                     request: {
                         type: 'GET',
                         url: 'http://localhost:3000/uploads/' + doc._id
@@ -105,7 +104,7 @@ router.post("/", fileUpload.single('file'), async (req, res, next) => {
 //handling requests for individual file uploads and retrievals
 
 router.get('/:uploadId', (req, res, next)=>{
-    Upload.findById(req.params.uploadId).exec().then(upload => {
+    Upload.findById(req.params.uploadId).select('_id fileName file').exec().then(upload => {
         /*if(!order){
             return res.status(404).json({
                 message: "Upload not found"

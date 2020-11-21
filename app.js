@@ -14,6 +14,7 @@ mongoose.connect('mongodb+srv://Henry:' + process.env.MONGO_ATLAS_PW + '@cluster
 });
 
 app.use(morgan('dev'));//collects logging info from server
+app.use('/fileuploads', express.static('fileuploads'));//makes fileuploads folder public
 app.use(bodyParser.urlencoded({extended: false}));//parses url data
 app.use(bodyParser.json());//parses json data
 
