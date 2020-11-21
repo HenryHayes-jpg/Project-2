@@ -7,6 +7,7 @@ const multer = require('multer');
 //returns a collection of files
 const Upload = require('../models/uploads');
 const User = require('../models/users');
+const checkAuth = require('../middleware/auth-check')
 
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
@@ -31,25 +32,23 @@ router.get('/', (req, res, next) => {
         res.status(200).json({
             count: docs.length,
             uploads: docs.map(doc =>{
-                //add filename and filetype later
-                return {
-                    _id: doc._id,
-                    file: doc.file,
-                    filename: doc.fileName,
-                    request: {
-                        type: 'GET',
-                        url: 'http://localhost:3000/uploads/' + doc._id
-                    }
-                }
-            })
-            
-        });
-    }).catch(err => {
+           //add filename and filetype later
+           return {
+               _id: doc._id,
+               file: doc.file,
+               filename: doc.fileName,
+               request: {
+                   type: 'GET',
+                   url: 'http://localhost:3000/uploads/' + doc._id
+               }
+           }
+       })
+    });
+ }).catch(err => {
         res.status(500).json({
             error: err
         });
     });
-});
 function getFileType(str){
     ext = str.split('.').pop();
     if(ext === "txt") {
@@ -64,13 +63,14 @@ function getFileType(str){
         return ext + "file";
     }   
 }
-router.post("/", fileUpload.single('file'), async (req, res, next) => {
+router.post("/", checkAuth, fileUpload.single('file'), async (req, res, next) => {
+    //name = req.file.filename;
     type = getFileType(req.file.originalname)
     const upload = new Upload({
       _id: new mongoose.Types.ObjectId(),
       file: req.file.path,
       fileName: req.file.originalname,
-      fileType: type
+      fileType: type,
     });
     upload
       .save()
@@ -80,7 +80,7 @@ router.post("/", fileUpload.single('file'), async (req, res, next) => {
           message: "Uploaded file succesfully",
           createdUpload: {
               name: result.fileName,
-              type: result.fileType, 
+              type: result.fileType,
               _id: result._id,
               file: req.file.path,
               request: {
@@ -126,7 +126,7 @@ router.get('/:uploadId', (req, res, next)=>{
     
 });
 
-router.delete('/:uploadId', (req, res, next)=>{
+router.delete('/:uploadId',checkAuth, (req, res, next)=>{
     Upload.remove({_id: req.params.uploadId}).exec().then(result => {
         res.status(200).json({
             message: "Upload deleted!",
@@ -139,5 +139,5 @@ router.delete('/:uploadId', (req, res, next)=>{
         });
     });
 });
-
+});
 module.exports = router;
