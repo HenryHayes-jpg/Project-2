@@ -3,32 +3,26 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const multer = require('multer');
-const fileUpload = multer({dest: 'fileuploads/'});
 
+//returns a collection of files
 const Upload = require('../models/uploads');
 const User = require('../models/users');
-//returns a collection of files
+
+const storage = multer.diskStorage({
+    destination: function(req, file, cb){
+        cb(null, './fileuploads/');
+    },
+    filename: function(req, file, cb){
+        cb(null, file.originalname);
+    }
+});
+
+const fileUpload = multer({storage: storage});
+
 
 //******************************************************************************** */
 //functions
-function getExtension(str){
-    return str.split('.')[1];
-}
 
-function getType(ext){
-    type = "";
-    object = {};//Use this object once I actually filter through data
-    if(ext === "xlsx" || ext === "xlsm"){
-        type = "Excell File";
-    }else if(ext === "pdf"){
-        type = "PDF file";
-    }else if(ext === "txt"){
-        type = "Raw Text file";
-    }else{
-        type = ext + " file";
-    }
-    return type;
-}
 
 //******************************************************************************** */
 router.get('/', (req, res, next) => {
@@ -57,15 +51,27 @@ router.get('/', (req, res, next) => {
         });
     });
 });
-
+function getFileType(str){
+    ext = str.split('.').pop();
+    if(ext === "txt") {
+        return "Text file";
+    }else if(ext === "docx"){
+        return "Word document";
+    }else if(ext === "xlxs" || ext === "xlsm"){
+        return "Excell document";
+    }else if(ext === "pdf"){
+        return "PDF document"
+    }else{
+        return ext + "file";
+    }   
+}
 router.post("/", fileUpload.single('file'), async (req, res, next) => {
-    //name = req.file.filename;
-    //type = getType(getExtension(name));
+    type = getFileType(req.file.originalname)
     const upload = new Upload({
       _id: new mongoose.Types.ObjectId(),
       file: req.file.path,
-      //fileName: name,
-      //fileType: req.file.mimetype,
+      fileName: req.file.originalname,
+      fileType: type
     });
     upload
       .save()
@@ -74,7 +80,8 @@ router.post("/", fileUpload.single('file'), async (req, res, next) => {
         res.status(201).json({
           message: "Uploaded file succesfully",
           createdUpload: {
-              //name: name,
+              name: result.fileName,
+              type: result.fileType, 
               _id: result._id,
               file: req.file.path,
               request: {
